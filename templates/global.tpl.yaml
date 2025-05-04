@@ -8,6 +8,10 @@ alerting:
   pushover:
     application-token: "{{ getenv "PUSHOVER_APP_TOKEN" }}"
     user-key: "{{ getenv "PUSHOVER_USER_KEY" }}"
+    default-alert:
+      send-on-resolved: true
+      failure-threshold: 5
+      success-threshold: 2
 
 security:
   basic:
