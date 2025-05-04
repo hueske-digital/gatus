@@ -5,13 +5,20 @@ storage:
   path: "{{ (printf "postgres://%s:%s@database:5432/%s?sslmode=disable" (getenv "POSTGRES_USER") (getenv "POSTGRES_PASSWORD") (getenv "POSTGRES_DB")) }}"
 
 alerting:
-  pushover:
-    application-token: "{{ getenv "PUSHOVER_APP_TOKEN" }}"
-    user-key: "{{ getenv "PUSHOVER_USER_KEY" }}"
+  custom:
+    url: https://api.pushover.net/1/messages.json
+    method: "POST"
+    body: |
+      token={{ getenv "PUSHOVER_APP_TOKEN" }}&user={{ getenv "PUSHOVER_USER_KEY" }}&device={{ getenv "PUSHOVER_DEVICES" }}&title=[ALERT_TRIGGERED_OR_RESOLVED]:+[SERVICE_NAME]&message=[ALERT_DESCRIPTION]
     default-alert:
+      enabled: true
       send-on-resolved: true
       failure-threshold: 5
       success-threshold: 2
+    placeholders:
+      ALERT_TRIGGERED_OR_RESOLVED:
+        TRIGGERED: "🫩"
+        RESOLVED: "🤩"
 
 security:
   basic:
