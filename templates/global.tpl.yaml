@@ -6,14 +6,16 @@ storage:
 
 alerting:
   custom:
-    url: https://webhook.site/1eb33780-a911-4a7d-9419-928eedf4fe96
+    url: https://api.pushover.net/1/messages.json
     method: "POST"
+    headers:
+      Content-Type: "application/json"
     body: |
       {
         "token": "{{ getenv "PUSHOVER_APP_TOKEN" }}",
         "user": "{{ getenv "PUSHOVER_USER_KEY" }}",
         "device": "{{ getenv "PUSHOVER_DEVICES" }}",
-        "title": "[ALERT_TRIGGERED_OR_RESOLVED]: [ENDPOINT_NAME]",
+        "title": "[ALERT_TRIGGERED_OR_RESOLVED] [ENDPOINT_NAME]",
         "message": "[ALERT_TRIGGERED_OR_RESOLVED] alert for <b>[ENDPOINT_NAME]</b> in group <b>[ENDPOINT_GROUP]</b>: [ALERT_DESCRIPTION]\n[RESULT_ERRORS]",
         "html": 1
       }
@@ -24,7 +26,7 @@ alerting:
       success-threshold: 2
     placeholders:
       ALERT_TRIGGERED_OR_RESOLVED:
-        TRIGGERED: "🫩"
+        TRIGGERED: "🔥"
         RESOLVED: "🤩"
 
 security:
