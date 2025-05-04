@@ -15,8 +15,8 @@ alerting:
         "token": "{{ getenv "PUSHOVER_APP_TOKEN" }}",
         "user": "{{ getenv "PUSHOVER_USER_KEY" }}",
         "device": "{{ getenv "PUSHOVER_DEVICES" }}",
-        "title": "[ALERT_TRIGGERED_OR_RESOLVED] [ENDPOINT_NAME]",
-        "message": "[ALERT_TRIGGERED_OR_RESOLVED] alert for <b>[ENDPOINT_NAME]</b> in group <b>[ENDPOINT_GROUP]</b>: [ALERT_DESCRIPTION]\n[RESULT_ERRORS]",
+        "title": "[ALERT_TRIGGERED_OR_RESOLVED] [ENDPOINT_URL]",
+        "message": "Description: [ALERT_DESCRIPTION] Errors: [RESULT_ERRORS]",
         "html": 1
       }
     default-alert:
