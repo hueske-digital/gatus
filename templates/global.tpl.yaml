@@ -21,6 +21,9 @@ ui:
   title: "{{ getenv "UI_TITLE" | default "Monitoring Dashboard | hueske.digital" }}"
   logo: "{{ getenv "UI_LOGO" | default "https://hueske.digital/wp-content/themes/hd-website/img/favicon/android-chrome-512x512.png" }}"
   dark-mode: {{ getenv "UI_DARK_MODE" | default "false" }}
+  badge:
+    response-time:
+      thresholds: [200, 300, 400, 500, 600]
 
 connectivity:
   checker:
