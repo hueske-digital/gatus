@@ -1,0 +1,28 @@
+metrics: {{ getenv "METRICS" | default "false" }}
+
+storage:
+  type: "{{ getenv "STORAGE_TYPE" | default "postgres" }}"
+  path: "{{ (printf "postgres://%s:%s@database:5432/%s?sslmode=disable" (getenv "POSTGRES_USER") (getenv "POSTGRES_PASSWORD") (getenv "POSTGRES_DB")) }}"
+
+alerting:
+  pushover:
+    application-token: "{{ getenv "PUSHOVER_APP_TOKEN" }}"
+    user-key: "{{ getenv "PUSHOVER_USER_KEY" }}"
+
+security:
+  basic:
+    username: "{{ getenv "BASIC_AUTH_USERNAME" | default "admin" }}"
+    password-bcrypt-base64: "{{ (getenv "BASIC_AUTH_PASSWORD" | default "admin") | crypto.Bcrypt 10 | base64.Encode }}"
+
+disable-monitoring-lock: {{ getenv "DISABLE_MONITORING_LOCK" | default "true" }}
+
+ui:
+  header: "{{ getenv "UI_HEADER" | default "Monitoring Dashboard" }}"
+  title: "{{ getenv "UI_TITLE" | default "Monitoring Dashboard | hueske.digital" }}"
+  logo: "{{ getenv "UI_LOGO" | default "https://hueske.digital/wp-content/themes/hd-website/img/favicon/android-chrome-512x512.png" }}"
+  dark-mode: {{ getenv "UI_DARK_MODE" | default "false" }}
+
+connectivity:
+  checker:
+    target: "{{ getenv "CONNECTIVITY_TARGET" | default "8.8.8.8:53" }}"
+    interval: "{{ getenv "CONNECTIVITY_INTERVAL" | default "30s" }}"

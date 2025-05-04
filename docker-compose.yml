@@ -1,0 +1,102 @@
+services:
+  app:
+    image: twinproduction/gatus:latest
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Berlin
+      - GATUS_CONFIG_PATH=/config
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - GATUS_LOG_LEVEL=WARN
+    volumes:
+      - app_config:/config
+    networks:
+      - default
+      - proxy_apps
+    depends_on:
+      gatus-globalconfig:
+        condition: service_completed_successfully
+      database:
+        condition: service_healthy
+
+  database:
+    image: postgres:17-alpine
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      - TZ=Europe/Berlin
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    labels:
+      - ofelia.restart=true
+      - ofelia.enabled=true
+      - "ofelia.job-exec.${COMPOSE_PROJECT_NAME}dbbackup.schedule=0 0 1 * * *"
+      - "ofelia.job-exec.listmonkdbbackup.command=sh -c 'pg_dumpall -U ${POSTGRES_USER} -f /var/lib/postgresql/data/backup.sql'"
+    networks:
+      - default
+
+  ssh-key-generator:
+    image: ghcr.io/hueske-digital/sshkey-generator:latest
+    restart: "no"
+    volumes:
+      - ssh_data:/root/.ssh
+
+  gatus-gitconfig:
+    image: alpine/git
+    depends_on:
+      ssh-key-generator:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    environment:
+      - GIT_REPO_URL
+      - SYNC_INTERVAL=${SYNC_INTERVAL:-120}
+    volumes:
+      - app_config:/config
+      - ssh_data:/root/.ssh
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      "
+        mkdir -p /config &&
+        if [ ! -d /config/.git ]; then
+          git clone --depth=1 -b main ${GIT_REPO_URL} /config;
+        fi;
+        while true; do
+          git -C /config pull origin main || echo 'Pull failed…';
+          sleep ${SYNC_INTERVAL};
+        done
+      "
+
+  gatus-globalconfig:
+    image: hairyhenderson/gomplate:alpine
+    env_file:
+      - .env
+    volumes:
+      - ./templates:/templates:ro
+      - app_config:/config
+    command:
+      [
+        "-f", "/templates/global.tpl.yaml",
+        "-o", "/config/global.yaml"
+      ]
+    restart: "no"
+    depends_on:
+      gatus-gitconfig:
+        condition: service_completed_successfully
+
+volumes:
+  app_config:
+  db_data:
+  ssh_data:
+
+networks:
+  proxy_apps:
+    name: proxy_apps
+    external: true
+  default:
