@@ -9,7 +9,14 @@ alerting:
     url: https://api.pushover.net/1/messages.json
     method: "POST"
     body: |
-      token={{ getenv "PUSHOVER_APP_TOKEN" }}&user={{ getenv "PUSHOVER_USER_KEY" }}&device={{ getenv "PUSHOVER_DEVICES" }}&title=[ALERT_TRIGGERED_OR_RESOLVED]:+[SERVICE_NAME]&message=[ALERT_DESCRIPTION]
+      {
+        "token": "{{ getenv "PUSHOVER_APP_TOKEN" }}",
+        "user": "{{ getenv "PUSHOVER_USER_KEY" }}",
+        "device": "{{ getenv "PUSHOVER_DEVICES" }}",
+        "title": "[ALERT_TRIGGERED_OR_RESOLVED]: [ENDPOINT_NAME]",
+        "message": "[ALERT_TRIGGERED_OR_RESOLVED] alert for <b>[ENDPOINT_NAME]</b> in group <b>[ENDPOINT_GROUP]</b>: [ALERT_DESCRIPTION]\n[RESULT_ERRORS]",
+        "html": 1
+      }
     default-alert:
       enabled: true
       send-on-resolved: true
