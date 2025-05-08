@@ -5,20 +5,10 @@ storage:
   path: "{{ (printf "postgres://%s:%s@database:5432/%s?sslmode=disable" (getenv "POSTGRES_USER") (getenv "POSTGRES_PASSWORD") (getenv "POSTGRES_DB")) }}"
 
 alerting:
-  custom:
-    url: https://api.pushover.net/1/messages.json
-    method: "POST"
-    headers:
-      Content-Type: "application/json"
-    body: |
-      {
-        "token": "{{ getenv "PUSHOVER_APP_TOKEN" }}",
-        "user": "{{ getenv "PUSHOVER_USER_KEY" }}",
-        "device": "{{ getenv "PUSHOVER_DEVICES" }}",
-        "title": "[ALERT_TRIGGERED_OR_RESOLVED] [ENDPOINT_URL]",
-        "message": "Description: [ALERT_DESCRIPTION] Errors: [RESULT_ERRORS]",
-        "html": 1
-      }
+  pushover:
+    application-token: "{{ getenv "PUSHOVER_APP_TOKEN" }}"
+    user-key: "{{ getenv "PUSHOVER_USER_KEY" }}"
+    device: "{{ getenv "PUSHOVER_DEVICES" }}"
     default-alert:
       enabled: true
       send-on-resolved: true
