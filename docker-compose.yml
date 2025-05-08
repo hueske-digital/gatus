@@ -68,17 +68,18 @@ services:
       - app_config:/config
       - ssh_data:/root/.ssh
     entrypoint: ["/bin/sh", "-c"]
-    command: >
-      "
-        mkdir -p /config &&
-        if [ ! -d /config/.git ]; then
-          git clone --depth=1 -b main ${GIT_REPO_URL} /config;
-        fi;
-        while true; do
-          git -C /config pull origin main || echo 'Pull failed…';
-          sleep ${SYNC_INTERVAL};
-        done
-      "
+    command: |
+      mkdir -p /config &&
+      if [ -f /config/config.yaml ] && [ ! -d /config/.git ]; then
+        rm /config/config.yaml
+      fi &&
+      if [ ! -d /config/.git ]; then
+        git clone --depth=1 -b main "${GIT_REPO_URL}" /config
+      fi &&
+      while true; do
+        git -C /config pull origin main || echo 'Pull failed…'
+        sleep "${SYNC_INTERVAL}"
+      done
 
   appconfig:
     image: hairyhenderson/gomplate:alpine
