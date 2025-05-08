@@ -29,7 +29,7 @@ cd gatus
 Run the following command to generate an SSH key for accessing the Git repository:
 
 ```bash
-docker compose run --rm ssh-key-generator
+docker compose run --rm sshkeygenerator
 ```
 
 Add the generated key as a deploy key in your Git repository (the one with config files for the checks) with **read-only** access.
