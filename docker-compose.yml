@@ -17,6 +17,8 @@ services:
     depends_on:
       gatus-globalconfig:
         condition: service_completed_successfully
+      gatus-gitconfig:
+        condition: service_healthy
       database:
         condition: service_healthy
 
