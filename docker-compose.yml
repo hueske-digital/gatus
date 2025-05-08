@@ -15,9 +15,9 @@ services:
       - default
       - proxy_apps
     depends_on:
-      gatus-globalconfig:
+      appconfig:
         condition: service_completed_successfully
-      gatus-gitconfig:
+      configsync:
         condition: service_healthy
       database:
         condition: service_healthy
@@ -45,20 +45,20 @@ services:
     networks:
       - default
 
-  ssh-key-generator:
+  sshkeygenerator:
     image: ghcr.io/hueske-digital/sshkey-generator:latest
     restart: "no"
     volumes:
       - ssh_data:/root/.ssh
 
-  gatus-gitconfig:
+  configsync:
     image: alpine/git
     healthcheck:
       test: ["CMD", "sh", "-c", "test -d /config/.git"]
       interval: 10s
       retries: 3
     depends_on:
-      ssh-key-generator:
+      sshkeygenerator:
         condition: service_completed_successfully
     restart: unless-stopped
     environment:
@@ -80,7 +80,7 @@ services:
         done
       "
 
-  gatus-globalconfig:
+  appconfig:
     image: hairyhenderson/gomplate:alpine
     env_file:
       - .env
@@ -94,7 +94,7 @@ services:
       ]
     restart: "no"
     depends_on:
-      gatus-gitconfig:
+      configsync:
         condition: service_healthy
 
 volumes:
