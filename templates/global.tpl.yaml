@@ -14,10 +14,6 @@ alerting:
       send-on-resolved: true
       failure-threshold: 5
       success-threshold: 2
-    placeholders:
-      ALERT_TRIGGERED_OR_RESOLVED:
-        TRIGGERED: "🔥"
-        RESOLVED: "🤩"
 
 security:
   basic:
