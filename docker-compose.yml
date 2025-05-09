@@ -40,8 +40,8 @@ services:
     labels:
       - ofelia.restart=true
       - ofelia.enabled=true
-      - "ofelia.job-exec.${COMPOSE_PROJECT_NAME}dbbackup.schedule=0 0 1 * * *"
-      - "ofelia.job-exec.listmonkdbbackup.command=sh -c 'pg_dumpall -U ${POSTGRES_USER} -f /var/lib/postgresql/data/backup.sql'"
+      - "ofelia.job-exec.${COMPOSE_PROJECT_NAME}dbbackup.schedule=0 * * * * *"
+      - "ofelia.job-exec.${COMPOSE_PROJECT_NAME}dbbackup.command=sh -c 'pg_dumpall -U ${POSTGRES_USER} -f /var/lib/postgresql/data/backup.sql'"
     networks:
       - default
 
