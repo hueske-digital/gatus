@@ -23,7 +23,7 @@ security:
     client-secret: "{{ getenv "OIDC_CLIENT_SECRET" }}"
     scopes: ["openid"]
 
-disable-monitoring-lock: {{ getenv "DISABLE_MONITORING_LOCK" | default "true" }}
+concurrency: {{ getenv "CONCURRENCY" | default "0" }}
 
 ui:
   header: "{{ getenv "UI_HEADER" | default "Monitoring Dashboard" }}"
