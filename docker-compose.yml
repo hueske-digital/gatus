@@ -23,9 +23,9 @@ services:
         condition: service_healthy
 
   database:
-    image: postgres:17-alpine
+    image: postgres:18-alpine
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql
     environment:
       - TZ=Europe/Berlin
       - POSTGRES_DB
