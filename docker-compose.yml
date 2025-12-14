@@ -23,7 +23,8 @@ services:
         condition: service_healthy
 
   database:
-    image: postgres:18-alpine
+    restart: unless-stopped
+    image: ppgautoupgrade/pgautoupgrade:latest
     volumes:
       - db_data:/var/lib/postgresql
     environment:
