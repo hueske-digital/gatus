@@ -24,7 +24,7 @@ services:
 
   database:
     restart: unless-stopped
-    image: ppgautoupgrade/pgautoupgrade:latest
+    image: pgautoupgrade/pgautoupgrade:latest
     volumes:
       - db_data:/var/lib/postgresql
     environment:
