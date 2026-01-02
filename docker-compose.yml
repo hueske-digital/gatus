@@ -9,11 +9,14 @@ services:
       - POSTGRES_PASSWORD
       - POSTGRES_DB
       - GATUS_LOG_LEVEL=WARN
+      - CADDY_DOMAIN=${CADDY_DOMAIN}
+      - CADDY_TYPE=${CADDY_TYPE:-external}
+      - CADDY_PORT=${CADDY_PORT:-8080}
     volumes:
       - app_config:/config
     networks:
       - default
-      - proxy_apps
+      - caddy
     depends_on:
       appconfig:
         condition: service_completed_successfully
@@ -107,7 +110,5 @@ volumes:
   ssh_data:
 
 networks:
-  proxy_apps:
-    name: proxy_apps
-    external: true
+  caddy:
   default:
