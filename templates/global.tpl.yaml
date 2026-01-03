@@ -26,6 +26,7 @@ security:
 concurrency: {{ getenv "CONCURRENCY" | default "0" }}
 
 ui:
+  default-sort-by: group
   header: "{{ getenv "UI_HEADER" | default "Monitoring Dashboard" }}"
   title: "{{ getenv "UI_TITLE" | default "Monitoring Dashboard | hueske.digital" }}"
   logo: "{{ getenv "UI_LOGO" | default "https://hueske.digital/wp-content/themes/hd-website/img/favicon/android-chrome-512x512.png" }}"
